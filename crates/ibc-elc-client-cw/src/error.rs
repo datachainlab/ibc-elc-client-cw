@@ -3,6 +3,7 @@ use ibc::core::ics02_client::error::ClientError;
 use light_client::types::proto::protobuf::Error as ProtoError;
 use light_client::Error as LightError;
 use prost::{DecodeError, EncodeError};
+use std::num::TryFromIntError;
 use std::string::FromUtf8Error;
 
 #[derive(Debug)]
@@ -14,6 +15,7 @@ pub enum ContractError {
     Encode(EncodeError),
     FromUtf8(FromUtf8Error),
     Client(ClientError),
+    TryFromInt(TryFromIntError),
     Unsupported(String),
     Generic(String),
 }
@@ -38,6 +40,7 @@ impl ToString for ContractError {
             Self::Encode(e) => e.to_string(),
             Self::FromUtf8(e) => e.to_string(),
             Self::Client(e) => e.to_string(),
+            Self::TryFromInt(e) => e.to_string(),
             Self::Unsupported(e) => format!("ContractError::Unsupported error {}", e),
             Self::Generic(e) => format!("ContractError::Generic error {}", e),
         }
@@ -83,5 +86,11 @@ impl From<FromUtf8Error> for ContractError {
 impl From<ClientError> for ContractError {
     fn from(v: ClientError) -> Self {
         Self::Client(v)
+    }
+}
+
+impl From<TryFromIntError> for ContractError {
+    fn from(v: TryFromIntError) -> Self {
+        Self::TryFromInt(v)
     }
 }

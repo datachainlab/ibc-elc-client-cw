@@ -3,6 +3,7 @@ resolver = "2"
 members = [
   "crates/ibc-elc-client-cw",
   "crates/ibc-ethereum-client-cw",
+  "crates/ibc-parlia-client-cw",
 ]
 
 [workspace.dependencies]
