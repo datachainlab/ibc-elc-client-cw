@@ -10,8 +10,8 @@ use prost::Message;
 pub trait Entrypoint {
     type LightClient: LightClient;
 
-    fn get_status_from_client_state(any_client_state: &Any) -> Result<String, ContractError>;
-    fn get_timestamp_from_consensus_state(any_consensus_state: &Any) -> Result<u64, ContractError>;
+    fn get_status_from_client_state(any_client_state: Any) -> Result<String, ContractError>;
+    fn get_timestamp_from_consensus_state(any_consensus_state: Any) -> Result<u64, ContractError>;
 
     fn instantiate(
         lc: &Self::LightClient,
@@ -122,7 +122,7 @@ pub trait Entrypoint {
         let retval = match msg {
             QueryMsg::Status(StatusMsg {}) => {
                 let any_client_state = ctx.client_state(ctx.client_id())?;
-                let status = Self::get_status_from_client_state(&any_client_state)?;
+                let status = Self::get_status_from_client_state(any_client_state)?;
                 to_json_binary(&StatusResponse { status })?
             }
             QueryMsg::ExportMetadata(ExportMetadataMsg {}) => {
@@ -133,7 +133,7 @@ pub trait Entrypoint {
             QueryMsg::TimestampAtHeight(msg) => {
                 let any_consensus_state =
                     ctx.consensus_state(ctx.client_id(), &msg.height.into())?;
-                let timestamp = Self::get_timestamp_from_consensus_state(&any_consensus_state)?;
+                let timestamp = Self::get_timestamp_from_consensus_state(any_consensus_state)?;
                 to_json_binary(&TimestampAtHeightResponse { timestamp })?
             }
             QueryMsg::VerifyClientMessage(msg) => {
