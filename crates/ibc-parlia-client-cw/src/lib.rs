@@ -10,7 +10,7 @@ use parlia_elc::consensus_state::ConsensusState;
 const ACTIVE: &str = "Active";
 const FROZEN: &str = "Frozen";
 
-pub struct ParliaEntrypoint;
+struct ParliaEntrypoint;
 
 impl Entrypoint for ParliaEntrypoint {
     type LightClient = ParliaLightClient;

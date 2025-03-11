@@ -16,7 +16,7 @@ const SYNC_COMMITTEE_SIZE: usize = if cfg!(feature = "minimal") {
 const ACTIVE: &str = "Active";
 const FROZEN: &str = "Frozen";
 
-pub struct EthereumEntrypoint;
+struct EthereumEntrypoint;
 
 impl Entrypoint for EthereumEntrypoint {
     type LightClient = EthereumLightClient<SYNC_COMMITTEE_SIZE>;
