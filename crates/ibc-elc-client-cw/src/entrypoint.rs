@@ -112,7 +112,7 @@ pub trait Entrypoint {
     }
 
     fn query(
-        lc: Self::LightClient,
+        lc: &Self::LightClient,
         deps: Deps<'_>,
         env: Env,
         msg: QueryMsg,
