@@ -4,12 +4,12 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-cosmwasm-schema = "2.2.1"
-cosmwasm-std = "2.2.1"
-cw-storage-plus = "2.0.0"
-prost = { version = "0.11", default-features = false, features = ["prost-derive"] }
-ibc = { version = "0.29.0", default-features = false, features = ["serde"] }
-derive_more = { version = "1.0", default-features = false, features = ["display"] }
+cosmwasm-schema	= { workspace = true }
+cosmwasm-std	= { workspace = true }
+cw-storage-plus	= { workspace = true }
+prost		= { workspace = true }
+ibc		= { workspace = true }
+derive_more	= { workspace = true }
 
-light-client = { git = "https://github.com/datachainlab/lcp", rev = "v0.2.12", default-features = false, features = ["ibc"] }
-store = { git = "https://github.com/datachainlab/lcp", rev = "v0.2.12", default-features = false }
+light-client	= { workspace = true }
+store		= { workspace = true }

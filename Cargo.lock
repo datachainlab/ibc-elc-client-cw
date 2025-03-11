@@ -962,7 +962,7 @@ dependencies = [
 [[package]]
 name = "ethereum-elc"
 version = "0.1.0"
-source = "git+https://github.com/datachainlab/ethereum-elc#90f11c122019245349b0826b2109cfe9c9d1c3d7"
+source = "git+https://github.com/datachainlab/ethereum-elc?rev=v0.1.0#90f11c122019245349b0826b2109cfe9c9d1c3d7"
 dependencies = [
  "displaydoc",
  "ethereum-ibc",
