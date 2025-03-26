@@ -17,5 +17,4 @@ ibc-elc-client-cw = { path = "../ibc-elc-client-cw" }
 ethereum-elc = { git = "https://github.com/datachainlab/ethereum-elc", rev = "v0.1.0", default-features = false }
 
 [features]
-default = ["minimal"]
 minimal = []
