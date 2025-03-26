@@ -32,19 +32,19 @@ impl ContractError {
     }
 }
 
-impl ToString for ContractError {
-    fn to_string(&self) -> String {
+impl Display for ContractError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
-            Self::Std(e) => e.to_string(),
-            Self::Proto(e) => e.to_string(),
-            Self::Light(e) => e.to_string(),
-            Self::Decode(e) => e.to_string(),
-            Self::Encode(e) => e.to_string(),
-            Self::FromUtf8(e) => e.to_string(),
-            Self::Client(e) => e.to_string(),
-            Self::TryFromInt(e) => e.to_string(),
-            Self::Unsupported(e) => format!("ContractError::Unsupported error {}", e),
-            Self::Generic(e) => format!("ContractError::Generic error {}", e),
+            Self::Std(e) => write!(f, "ContractError::Std({})", e),
+            Self::Proto(e) => write!(f, "ContractError::Proto({})", e),
+            Self::Light(e) => write!(f, "ContractError::Light({})", e),
+            Self::Decode(e) => write!(f, "ContractError::Decode({})", e),
+            Self::Encode(e) => write!(f, "ContractError::Encode({})", e),
+            Self::FromUtf8(e) => write!(f, "ContractError::FromUtf8({})", e),
+            Self::Client(e) => write!(f, "ContractError::Client({})", e),
+            Self::TryFromInt(e) => write!(f, "ContractError::TryFromInt({})", e),
+            Self::Unsupported(e) => write!(f, "ContractError::Unsupported({})", e),
+            Self::Generic(e) => write!(f, "ContractError::Generic({})", e),
         }
     }
 }

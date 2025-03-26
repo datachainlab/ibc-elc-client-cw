@@ -30,7 +30,7 @@ pub trait Entrypoint {
 
         ctx.store_client_state(res.height, any_client_state)?;
         ctx.store_consensus_state(res.height, any_consensus_state)?;
-        ctx.store_update_meta(res.height, ctx.host_timestamp().into(), ctx.host_height())?;
+        ctx.store_update_meta(res.height, ctx.host_timestamp(), ctx.host_height())?;
 
         Ok(Response::default().set_data(to_json_binary(&ContractResult::success())?))
     }
@@ -53,7 +53,7 @@ pub trait Entrypoint {
 
                 ctx.store_client_state(res.height, res.new_any_client_state)?;
                 ctx.store_consensus_state(res.height, res.new_any_consensus_state)?;
-                ctx.store_update_meta(res.height, ctx.host_timestamp().into(), ctx.host_height())?;
+                ctx.store_update_meta(res.height, ctx.host_timestamp(), ctx.host_height())?;
 
                 ContractResult::success().heights(vec![res.height])
             }
@@ -64,7 +64,7 @@ pub trait Entrypoint {
                     _ => panic!("unexpected non-Misbehaviour client message"),
                 };
 
-                let latest_height = lc.latest_height(&ctx, &ctx.client_id())?;
+                let latest_height = lc.latest_height(&ctx, ctx.client_id())?;
                 ctx.store_client_state(latest_height, res.new_any_client_state)?;
 
                 ContractResult::success()
@@ -144,10 +144,7 @@ pub trait Entrypoint {
             QueryMsg::CheckForMisbehaviour(msg) => {
                 let any_message = Any::decode(msg.client_message.as_slice())?;
                 let res = lc.update_client(&ctx, ctx.client_id().clone(), any_message)?;
-                let found_misbehaviour = match res {
-                    UpdateClientResult::Misbehaviour(_) => true,
-                    _ => false,
-                };
+                let found_misbehaviour = matches!(res, UpdateClientResult::Misbehaviour(_));
                 to_json_binary(&CheckForMisbehaviourResponse { found_misbehaviour })?
             }
         };
