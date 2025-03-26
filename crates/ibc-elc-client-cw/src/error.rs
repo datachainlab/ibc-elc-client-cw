@@ -1,8 +1,10 @@
 use cosmwasm_std::StdError;
 use ibc::core::ics02_client::error::ClientError;
 use light_client::types::proto::protobuf::Error as ProtoError;
-use light_client::Error as LightError;
+use light_client::types::{ClientId, Height};
+use light_client::{Error as LightError, LightClientSpecificError};
 use prost::{DecodeError, EncodeError};
+use std::fmt::{Debug, Display, Formatter, Result};
 use std::num::TryFromIntError;
 use std::string::FromUtf8Error;
 
@@ -94,3 +96,22 @@ impl From<TryFromIntError> for ContractError {
         Self::TryFromInt(v)
     }
 }
+
+#[derive(Debug)]
+pub enum WasmLightClientSpecificError {
+    NotAnyWasmClientState(DecodeError, ClientId),
+    NotWasmClientState(DecodeError, ClientId),
+    NotAnyClientState(DecodeError, ClientId),
+
+    NotAnyWasmConsensusState(DecodeError, ClientId, Height),
+    NotWasmConsensusState(DecodeError, ClientId, Height),
+    NotAnyConsensusState(DecodeError, ClientId, Height),
+}
+
+impl Display for WasmLightClientSpecificError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        Debug::fmt(self, f)
+    }
+}
+
+impl LightClientSpecificError for WasmLightClientSpecificError {}

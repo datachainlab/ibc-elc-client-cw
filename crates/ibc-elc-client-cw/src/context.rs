@@ -1,4 +1,4 @@
-use crate::error::ContractError;
+use crate::error::{ContractError, WasmLightClientSpecificError};
 use crate::wasm_client_state::WasmClientState;
 use crate::wasm_consensus_state::WasmConsensusState;
 use core::str::FromStr;
@@ -176,13 +176,15 @@ impl<'a, C: CustomQuery> ClientReader for Context<'a, C> {
         let value = self
             .get(CLIENT_STATE.as_bytes())
             .ok_or(LightError::client_state_not_found(client_id.clone()))?;
-        let any_wasm_client_state = Any::decode(value.as_slice())
-            .map_err(|_| LightError::client_state_not_found(client_id.clone()))?;
+        let any_wasm_client_state = Any::decode(value.as_slice()).map_err(|e| {
+            WasmLightClientSpecificError::NotAnyWasmClientState(e, client_id.clone())
+        })?;
         let wasm_client_state: WasmClientState = any_wasm_client_state
             .try_into()
-            .map_err(|_| LightError::client_state_not_found(client_id.clone()))?;
-        Any::decode(wasm_client_state.data.as_slice())
-            .map_err(|_| LightError::client_state_not_found(client_id.clone()))
+            .map_err(|e| WasmLightClientSpecificError::NotWasmClientState(e, client_id.clone()))?;
+        let any_client_state = Any::decode(wasm_client_state.data.as_slice())
+            .map_err(|e| WasmLightClientSpecificError::NotAnyClientState(e, client_id.clone()))?;
+        Ok(any_client_state)
     }
 
     fn consensus_state(&self, client_id: &ClientId, height: &Height) -> Result<Any, LightError> {
@@ -197,13 +199,18 @@ impl<'a, C: CustomQuery> ClientReader for Context<'a, C> {
                 client_id.clone(),
                 *height,
             ))?;
-        let any_wasm_consensus_state = Any::decode(value.as_slice())
-            .map_err(|_| LightError::consensus_state_not_found(client_id.clone(), *height))?;
-        let wasm_consensus_state: WasmConsensusState = any_wasm_consensus_state
-            .try_into()
-            .map_err(|_| LightError::consensus_state_not_found(client_id.clone(), *height))?;
-        Any::decode(wasm_consensus_state.data.as_slice())
-            .map_err(|_| LightError::consensus_state_not_found(client_id.clone(), *height))
+        let any_wasm_consensus_state = Any::decode(value.as_slice()).map_err(|e| {
+            WasmLightClientSpecificError::NotAnyWasmConsensusState(e, client_id.clone(), *height)
+        })?;
+        let wasm_consensus_state: WasmConsensusState =
+            any_wasm_consensus_state.try_into().map_err(|e| {
+                WasmLightClientSpecificError::NotWasmConsensusState(e, client_id.clone(), *height)
+            })?;
+        let any_consensus_state =
+            Any::decode(wasm_consensus_state.data.as_slice()).map_err(|e| {
+                WasmLightClientSpecificError::NotAnyConsensusState(e, client_id.clone(), *height)
+            })?;
+        Ok(any_consensus_state)
     }
 }
 
