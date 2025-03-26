@@ -13,4 +13,4 @@ light-client	= { workspace = true }
 
 ibc-elc-client-cw = { path = "../ibc-elc-client-cw" }
 
-parlia-elc = { git = "https://github.com/datachainlab/parlia-elc", rev = "v0.3.8", version = "0.2.9", default-features = false, features = ["dev"] }
+parlia-elc = { git = "https://github.com/datachainlab/parlia-elc", rev = "v0.3.8", default-features = false }
