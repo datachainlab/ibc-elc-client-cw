@@ -301,9 +301,7 @@ impl<'a, C: CustomQuery> ExecutionContext for Context<'a, C> {
             height.revision_number(),
             height.revision_height(),
         ));
-        let time_vec = u64::try_from(host_timestamp.as_unix_timestamp_nanos())
-            .unwrap()
-            .to_be_bytes();
+        let time_vec = u64::try_from(host_timestamp.as_unix_timestamp_nanos())?.to_be_bytes();
         self.set(prefixed_key, time_vec.into());
 
         let prefixed_key = self.prefixed_key(format!(
