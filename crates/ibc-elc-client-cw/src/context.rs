@@ -3,7 +3,6 @@ use crate::wasm_client_state::WasmClientState;
 use crate::wasm_consensus_state::WasmConsensusState;
 use core::str::FromStr;
 use cosmwasm_std::{Binary, CustomQuery, Deps, DepsMut, Empty, Env, Storage};
-use cw_storage_plus::Map;
 use light_client::types::{Any, ClientId, Height, Time};
 use light_client::Error as LightError;
 use light_client::{ClientReader, HostClientReader, HostContext};
@@ -16,17 +15,8 @@ pub const SUBSTITUTE_PREFIX: &[u8] = b"substitute/";
 pub const CLIENT_PREFIX: &str = "clients";
 pub const CLIENT_STATE: &str = "clientState";
 pub const CONSENSUS_STATE_PREFIX: &str = "consensusStates";
-pub const ITERATE_CONSENSUS_STATE_PREFIX: &str = "iterateConsensusStates";
 pub const PROCESSED_TIME: &str = "processedTime";
 pub const PROCESSED_HEIGHT: &str = "processedHeight";
-
-/// - [`Height`] cannot be used directly as keys in the map,
-///   as it doesn't implement some cw_storage specific traits.
-/// - Only a sorted set is needed. So the value type is set to
-///   [`Empty`] following
-///   ([cosmwasm-book](https://book.cosmwasm.com/cross-contract/map-storage.html#maps-as-sets)).
-pub const CONSENSUS_STATE_HEIGHT_MAP: Map<(u64, u64), Empty> =
-    Map::new(ITERATE_CONSENSUS_STATE_PREFIX);
 
 pub struct Context<'a, C: CustomQuery = Empty> {
     deps: Option<Deps<'a, C>>,
@@ -324,12 +314,6 @@ impl<'a, C: CustomQuery> ExecutionContext for Context<'a, C> {
         let revision_height_vec = host_height.revision_height().to_be_bytes();
         self.set(prefixed_key, revision_height_vec.into());
 
-        CONSENSUS_STATE_HEIGHT_MAP.save(
-            self.storage_mut(),
-            (height.revision_number(), height.revision_height()),
-            &Empty::default(),
-        )?;
-
         Ok(())
     }
 
@@ -347,11 +331,6 @@ impl<'a, C: CustomQuery> ExecutionContext for Context<'a, C> {
             height.revision_height(),
         ));
         self.remove(&prefixed_key);
-
-        CONSENSUS_STATE_HEIGHT_MAP.remove(
-            self.storage_mut(),
-            (height.revision_number(), height.revision_height()),
-        );
 
         Ok(())
     }
