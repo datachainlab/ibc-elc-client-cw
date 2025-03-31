@@ -1,0 +1,16 @@
+[package]
+name = "ibc-parlia-client-cw"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = [ "cdylib", "rlib" ]
+
+[dependencies]
+cosmwasm-std	= { workspace = true }
+
+light-client	= { workspace = true }
+
+ibc-elc-client-cw = { path = "../ibc-elc-client-cw" }
+
+parlia-elc = { git = "https://github.com/datachainlab/parlia-elc", rev = "v0.3.8", default-features = false }

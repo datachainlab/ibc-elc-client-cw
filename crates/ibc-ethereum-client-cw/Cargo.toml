@@ -1,0 +1,20 @@
+[package]
+name = "ibc-ethereum-client-cw"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = [ "cdylib", "rlib" ]
+
+[dependencies]
+cosmwasm-std	= { workspace = true }
+ibc		= { workspace = true }
+
+light-client	= { workspace = true }
+
+ibc-elc-client-cw = { path = "../ibc-elc-client-cw" }
+
+ethereum-elc = { git = "https://github.com/datachainlab/ethereum-elc", rev = "v0.1.0", default-features = false }
+
+[features]
+minimal = []

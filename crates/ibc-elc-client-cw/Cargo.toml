@@ -1,0 +1,14 @@
+[package]
+name = "ibc-elc-client-cw"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cosmwasm-schema	= { workspace = true }
+cosmwasm-std	= { workspace = true }
+prost		= { workspace = true }
+ibc		= { workspace = true }
+derive_more	= { workspace = true }
+
+light-client	= { workspace = true }
+store		= { workspace = true }
