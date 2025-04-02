@@ -15,3 +15,7 @@ derive_more	= { version = "1.0", default-features = false, features = ["display"
 
 light-client	= { git = "https://github.com/datachainlab/lcp", rev = "v0.2.12", default-features = false }
 store		= { git = "https://github.com/datachainlab/lcp", rev = "v0.2.12", default-features = false }
+
+[profile.release]
+lto = true
+opt-level = 's'
